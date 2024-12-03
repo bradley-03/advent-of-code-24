@@ -32,5 +32,19 @@ for (i = 0; i < input.length; i++) {
   totalDistance += distance
 }
 
-// final output
-console.log(totalDistance)
+// final output (solution 1)
+console.log(`Solution 1: ${totalDistance}`)
+
+let similarityScore = 0
+
+function getNumCountFromList(num) {
+  return sortedList2.reduce((total, current) => (current === num ? total + 1 : total), 0)
+}
+
+for (let number of sortedList1) {
+  const numCount = getNumCountFromList(number)
+  similarityScore += number * numCount
+}
+
+// final output (solution 2)
+console.log(`Solution 2: ${similarityScore}`)
