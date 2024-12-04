@@ -16,5 +16,25 @@ function calculateSafeReadings() {
   return input.reduce((total, current) => (isReadingSafe(current) ? total + 1 : total), 0)
 }
 
+function calculatePart2() {
+  let total = 0
+  for (let reading of input) {
+    if (isReadingSafe(reading) === false) {
+      for (let i = 0; i < reading.length; i++) {
+        const slicedArr = reading.filter((_, index) => i !== index)
+        if (isReadingSafe(slicedArr)) {
+          total++
+          break
+        }
+      }
+    } else {
+      total++
+    }
+  }
+  return total
+}
+
 // final output (solution 1)
 console.log(`Solution 1: ${calculateSafeReadings()}`)
+
+console.log(`Solution 2: ${calculatePart2()}`)
