@@ -107,13 +107,18 @@ function checkSurroundings(row, col) {
   return foundCount
 }
 
-let totalWordCount = 0
-for (let row = 0; row < input.length; row++) {
-  for (let col = 0; col < input[row].length; col++) {
-    if (input[row][col] === "X") {
-      // console.log("hit", row, col)
-      totalWordCount += checkSurroundings(row, col)
+function calculateXmas() {
+  let totalWordCount = 0
+  for (let row = 0; row < input.length; row++) {
+    for (let col = 0; col < input[row].length; col++) {
+      if (input[row][col] === "X") {
+        // console.log("hit", row, col)
+        totalWordCount += checkSurroundings(row, col)
+      }
     }
   }
+  return totalWordCount
 }
-console.log(totalWordCount)
+
+// solution 1 output
+console.log(`Solution 1: ${calculateXmas()}`)
