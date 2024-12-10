@@ -107,6 +107,21 @@ function checkSurroundings(row, col) {
   return foundCount
 }
 
+function checkXmas(row, col) {
+  if (row > 0 && row < input.length - 1 && col > 0 && col < input[row].length - 1) {
+    const topLeft = input[row - 1][col - 1]
+    const bottomRight = input[row + 1][col + 1]
+    const topRight = input[row - 1][col + 1]
+    const bottomLeft = input[row + 1][col - 1]
+    if (
+      (topLeft + bottomRight === "MS" || topLeft + bottomRight === "SM") &&
+      (topRight + bottomLeft === "MS" || topRight + bottomLeft === "SM")
+    ) {
+      return true
+    }
+  }
+}
+
 function calculateXmas() {
   let totalWordCount = 0
   for (let row = 0; row < input.length; row++) {
@@ -120,5 +135,22 @@ function calculateXmas() {
   return totalWordCount
 }
 
+function calculateXmasCross() {
+  let totalWordCount = 0
+  for (let row = 0; row < input.length; row++) {
+    for (let col = 0; col < input[row].length; col++) {
+      if (input[row][col] === "A") {
+        if (checkXmas(row, col)) {
+          totalWordCount++
+        }
+      }
+    }
+  }
+  return totalWordCount
+}
+
 // solution 1 output
 console.log(`Solution 1: ${calculateXmas()}`)
+
+// solution 2 output
+console.log(`Solution 2: ${calculateXmasCross()}`)
