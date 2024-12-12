@@ -43,27 +43,40 @@ function shouldSwapNumbers(currentNum, compareAgainst) {
 
 function calculateMiddleNumTotal() {
   let total = 0
+  let correctPages = []
+  let pageWasUpdated = false
+
+  console.log(pages)
   for (let page = 0; page < pages.length; page++) {
     for (let num = 0; num < pages[page].length; num++) {
       for (let compareNum = num + 1; compareNum < pages[page].length - 1; compareNum++) {
         if (shouldSwapNumbers(pages[page][num], pages[page][compareNum])) {
-          const tempNum = pages[page][num]
-          pages[page][num] = pages[page][compareNum]
-          pages[page][compareNum] = tempNum
+          if (num > compareNum) {
+            const tempNum = pages[page][num]
+            pages[page][num] = pages[page][compareNum]
+            pages[page][compareNum] = tempNum
+            pageWasUpdated = true
+          }
           break
         }
       }
       break
     }
+    if (pageWasUpdated === false) {
+      correctPages.push(pages[page])
+    }
   }
 
   console.log(pages)
-  // for (let page of orderedPages) {
-  //   const middleNum = page[Math.floor((page.length - 1) / 2)]
+  for (let page of pages) {
+    const middleNum = page[Math.floor((page.length - 1) / 2)]
 
-  //   total += middleNum
-  // }
-  // return total
+    total += middleNum
+  }
+
+  console.log(correctPages)
+
+  return total
 }
 
 console.log(`Solution 1: ${calculateMiddleNumTotal()}`)
