@@ -1,5 +1,5 @@
 const fs = require("fs")
-const input = fs.readFileSync("./inputs/5.txt", "utf8").trim().split("\n\n")
+const input = fs.readFileSync("./inputs/5.txt", "utf8").replace(/\r\n/g, "\n").trim().split("\n\n")
 
 const orderingRules = []
 
@@ -18,65 +18,52 @@ input[0].split("\n").forEach(rule => {
 })
 const pages = input[1].split("\n").map(pages => pages.split(",").map(page => parseInt(page)))
 
-// function sortFn(x, y) {
-//   const foundOrder = orderingRules.find(rule => rule.before === x)
-//   if (foundOrder) {
-//     if (foundOrder.after.includes(y)) {
-//       return -1
-//     } else {
-//       return 1
-//     }
-//   }
-//   return 0
-// }
-function shouldSwapNumbers(currentNum, compareAgainst) {
-  const foundOrder = orderingRules.find(rule => rule.before === currentNum)
+function arraysEqual(arr1, arr2) {
+  return JSON.stringify(arr1) == JSON.stringify(arr2)
+}
 
+function sortFn(x, y) {
+  const foundOrder = orderingRules.find(rule => rule.before === x)
   if (foundOrder) {
-    if (foundOrder.after.includes(compareAgainst)) {
-      return true
+    if (foundOrder.after.includes(y)) {
+      return -1
+    } else {
+      return 1
     }
-    return false
   }
-  return false
+  return 0
 }
 
 function calculateMiddleNumTotal() {
-  let total = 0
+  let correctTotal = 0
+  let incorrectTotal = 0
   let correctPages = []
-  let pageWasUpdated = false
+  let incorrectPages = []
+  let sortedPages = pages.map(page => [...page].sort(sortFn))
 
-  console.log(pages)
-  for (let page = 0; page < pages.length; page++) {
-    for (let num = 0; num < pages[page].length; num++) {
-      for (let compareNum = num + 1; compareNum < pages[page].length - 1; compareNum++) {
-        if (shouldSwapNumbers(pages[page][num], pages[page][compareNum])) {
-          if (num > compareNum) {
-            const tempNum = pages[page][num]
-            pages[page][num] = pages[page][compareNum]
-            pages[page][compareNum] = tempNum
-            pageWasUpdated = true
-          }
-          break
-        }
-      }
-      break
-    }
-    if (pageWasUpdated === false) {
-      correctPages.push(pages[page])
+  for (let pageIdx = 0; pageIdx < pages.length; pageIdx++) {
+    if (arraysEqual(pages[pageIdx], sortedPages[pageIdx])) {
+      correctPages.push(sortedPages[pageIdx])
+    } else {
+      incorrectPages.push(sortedPages[pageIdx])
     }
   }
 
-  console.log(pages)
-  for (let page of pages) {
+  for (let page of correctPages) {
     const middleNum = page[Math.floor((page.length - 1) / 2)]
 
-    total += middleNum
+    correctTotal += middleNum
+  }
+  for (let page of incorrectPages) {
+    const middleNum = page[Math.floor((page.length - 1) / 2)]
+
+    incorrectTotal += middleNum
   }
 
-  console.log(correctPages)
-
-  return total
+  return { correct: correctTotal, incorrect: incorrectTotal }
 }
 
-console.log(`Solution 1: ${calculateMiddleNumTotal()}`)
+const totals = calculateMiddleNumTotal()
+
+console.log(`Solution 1: ${totals.correct}`)
+console.log(`Solution 2: ${totals.incorrect}`)
